@@ -46,6 +46,7 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeState();
         initializeLayout();
+        loadMovies();
     }
 
     public void initializeState() {
@@ -138,6 +139,33 @@ public class HomeController implements Initializable {
     }
 
     public void sortBtnClicked(ActionEvent actionEvent) {
-        sortMovies();
+        //sortMovies();
+        String searchQuery = searchField.getText().trim();
+        String genre = genreComboBox.getSelectionModel().getSelectedItem().toString();
+
+        try {
+            MovieAPI movieAPI = new MovieAPI();
+            String moviesJson = movieAPI.getMovies(searchQuery, genre);
+            List<Movie> filteredMovies = movieAPI.parseMoviesJson(moviesJson);
+
+            observableMovies.clear();
+            observableMovies.addAll(filteredMovies);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Geeignete Fehlerbehandlung hier
+        }
     }
+
+    private void loadMovies() {
+        try {
+            MovieAPI movieAPI = new MovieAPI();
+            String moviesJson = movieAPI.getAllMovies();
+            List<Movie> movies = movieAPI.parseMoviesJson(moviesJson);
+
+            observableMovies.clear();
+            observableMovies.addAll(movies);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Geeignete Fehlerbehandlung hier
+        }
 }
