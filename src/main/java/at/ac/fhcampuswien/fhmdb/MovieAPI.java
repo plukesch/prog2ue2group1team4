@@ -27,6 +27,7 @@ public class MovieAPI {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             // Gibt den JSON-String zurück
+            assert response.body() != null;
             return response.body().string();
         }
     }
@@ -57,6 +58,7 @@ public class MovieAPI {
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
+            assert response.body() != null;
             return response.body().string();
         }
     }
