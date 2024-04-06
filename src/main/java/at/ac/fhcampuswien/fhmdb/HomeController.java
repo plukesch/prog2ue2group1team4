@@ -168,4 +168,5 @@ public class HomeController implements Initializable {
             e.printStackTrace();
             // Geeignete Fehlerbehandlung hier
         }
+    }
 }
