@@ -5,6 +5,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -58,9 +61,9 @@ public class MovieAPI {
         }
     }
 
-    /*public List<Movie> parseMoviesJson(String json) {
+    public List<Movie> parseMoviesJson(String json) {
         Gson gson = new Gson();
         Type movieListType = new TypeToken<List<Movie>>(){}.getType();
         return gson.fromJson(json, movieListType);
-    }*/
+    }
 }
