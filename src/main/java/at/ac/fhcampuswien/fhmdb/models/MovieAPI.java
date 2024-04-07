@@ -14,10 +14,11 @@ import java.util.List;
 public class MovieAPI extends BaseAPI{
 
     private Type movieListType = new TypeToken<List<Movie>>(){}.getType();
+    
 
     private final String PATH = "movies";
 
-    
+
     public List<Movie> index(){
         HttpUrl url = this.buildUrl();
         Request request = new Request.Builder()
