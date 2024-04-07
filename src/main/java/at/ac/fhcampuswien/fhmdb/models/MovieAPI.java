@@ -40,6 +40,7 @@ public class MovieAPI extends BaseAPI{
         HttpUrl.Builder urlBuilder = HttpUrl.parse(this.BASE_URL).newBuilder();
         HttpUrl url = urlBuilder.addPathSegment(this.PATH).build();
 
+
         return url;
     }
 }
