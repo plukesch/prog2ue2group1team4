@@ -17,6 +17,7 @@ public class MovieAPI extends BaseAPI{
 
     private final String PATH = "movies";
 
+    
     public List<Movie> index(){
         HttpUrl url = this.buildUrl();
         Request request = new Request.Builder()
