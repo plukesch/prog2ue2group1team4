@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
+import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
@@ -46,11 +47,11 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeState();
         initializeLayout();
-        loadMovies();
     }
 
     public void initializeState() {
-        //allMovies = Movie.initializeMovies();
+        MovieAPI api = new MovieAPI();
+        allMovies = api.index();
         observableMovies.clear();
         observableMovies.addAll(allMovies); // add all movies to the observable list
         sortedState = SortedState.NONE;
@@ -139,34 +140,6 @@ public class HomeController implements Initializable {
     }
 
     public void sortBtnClicked(ActionEvent actionEvent) {
-        //sortMovies();
-        String searchQuery = searchField.getText().trim();
-        String genre = genreComboBox.getSelectionModel().getSelectedItem().toString();
-
-        try {
-            MovieAPI movieAPI = new MovieAPI();
-            String moviesJson = movieAPI.getMovies(searchQuery, genre);
-            List<Movie> filteredMovies = movieAPI.parseMoviesJson(moviesJson);
-
-            observableMovies.clear();
-            observableMovies.addAll(filteredMovies);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Geeignete Fehlerbehandlung hier
-        }
-    }
-
-    private void loadMovies() {
-        try {
-            MovieAPI movieAPI = new MovieAPI();
-            String moviesJson = movieAPI.getAllMovies();
-            List<Movie> movies = movieAPI.parseMoviesJson(moviesJson);
-
-            observableMovies.clear();
-            observableMovies.addAll(movies);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Geeignete Fehlerbehandlung hier
-        }
+        sortMovies();
     }
 }
