@@ -1,9 +1,7 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
 import com.google.gson.reflect.TypeToken;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -17,9 +15,9 @@ public class MovieAPI extends BaseAPI{
 
     private final String PATH = "movies";
 
-    
-    public List<Movie> index(){
-        HttpUrl url = this.buildUrl();
+
+    public List<Movie> index(String query, String genre){
+        HttpUrl url = this.buildUrlWithParams(query, genre);
         Request request = new Request.Builder()
                 .url(url.toString())
                 .addHeader("User-Agent", "http.agent")
@@ -37,11 +35,31 @@ public class MovieAPI extends BaseAPI{
         return parsedMovies;
     }
 
-    private HttpUrl buildUrl(){
+    private HttpUrl buildUrl() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(this.BASE_URL).newBuilder();
+
+        urlBuilder.addQueryParameter("genre", "ACTION");
+
         HttpUrl url = urlBuilder.addPathSegment(this.PATH).build();
 
+        System.out.println(urlBuilder);
 
         return url;
+    }
+
+    private HttpUrl buildUrlWithParams(String query, String genre) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(this.BASE_URL).newBuilder();
+        urlBuilder.addPathSegment(this.PATH);
+
+        if (query != null && !query.isEmpty()) {
+            urlBuilder.addQueryParameter("query", query);
+        }
+        if (genre != null && !genre.isEmpty()) {
+            urlBuilder.addQueryParameter("genre", genre);
+        }
+
+        System.out.println(urlBuilder);
+
+        return urlBuilder.build();
     }
 }
