@@ -15,11 +15,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 import java.net.URL;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class HomeController implements Initializable {
     @FXML
@@ -66,6 +67,8 @@ public class HomeController implements Initializable {
         movieListView.setCellFactory(movieListView -> new MovieCell()); // apply custom cells to the listview
 
         Object[] genres = Genre.values();   // get all genres
+        yearComboBox.getItems().addAll(getReleasedYears());
+        ratingComboBox.getItems().addAll(getRating());
         genreComboBox.getItems().add("No filter");  // add "no filter" to the combobox
         genreComboBox.getItems().addAll(genres);    // add all genres to the combobox
         genreComboBox.setPromptText("Filter by Genre");
@@ -154,5 +157,27 @@ public class HomeController implements Initializable {
 
     public void sortBtnClicked(ActionEvent actionEvent) {
         sortMovies();
+    }
+
+    private ArrayList<Integer> getReleasedYears(){
+        int start = 1950;
+        int end = 2024;
+        ArrayList<Integer> years = new ArrayList<>();
+
+        for (int i = start; i <= end; i++) {
+            years.add(i);
+        }
+        return years;
+    }
+
+    private ArrayList<Double> getRating(){
+        double start = 0.0;
+        double end = 10.1;
+        ArrayList<Double> ratings = new ArrayList<>();
+
+        for (double i = start; i <= end; i += 0.1) {
+            ratings.add(new BigDecimal(i).setScale(1, RoundingMode.DOWN).doubleValue());
+        }
+        return ratings;
     }
 }
