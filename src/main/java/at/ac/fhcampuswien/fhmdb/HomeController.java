@@ -56,7 +56,7 @@ public class HomeController implements Initializable {
 
     public void initializeState() {
         MovieAPI api = new MovieAPI();
-        allMovies = api.index("", ""); // Leere Strings für initiales Laden ohne Filter
+        allMovies = api.index("", "", "", ""); // Leere Strings für initiales Laden ohne Filter
         observableMovies.clear();
         observableMovies.addAll(allMovies); // Fügt alle Filme zur observable list hinzu
         sortedState = SortedState.NONE;
@@ -67,7 +67,9 @@ public class HomeController implements Initializable {
         movieListView.setCellFactory(movieListView -> new MovieCell()); // apply custom cells to the listview
 
         Object[] genres = Genre.values();   // get all genres
+        yearComboBox.getItems().add("No filter");
         yearComboBox.getItems().addAll(getReleasedYears());
+        ratingComboBox.getItems().add("No filter");
         ratingComboBox.getItems().addAll(getRating());
         genreComboBox.getItems().add("No filter");  // add "no filter" to the combobox
         genreComboBox.getItems().addAll(genres);    // add all genres to the combobox
@@ -140,7 +142,7 @@ public class HomeController implements Initializable {
         observableMovies.addAll(filteredMovies);
     }
 
-    public void searchBtnClicked(ActionEvent actionEvent) {
+    /*public void searchBtnClicked(ActionEvent actionEvent) {
         String searchQuery = searchField.getText().trim();
         String genre = "";
         if (genreComboBox.getValue() != null){
@@ -151,6 +153,21 @@ public class HomeController implements Initializable {
         }
 
         List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre);
+        observableMovies.setAll(filteredMovies);
+        sortMovies(sortedState);
+    }*/
+
+    public void searchBtnClicked(ActionEvent actionEvent) {
+        String searchQuery = searchField.getText().trim();
+        String genre = genreComboBox.getValue() != null ? genreComboBox.getValue().toString() : "No filter";
+        String releaseYear = yearComboBox.getValue() != null ? yearComboBox.getValue().toString() : "No filter";
+        String rating = ratingComboBox.getValue() != null ? ratingComboBox.getValue().toString() : "No filter";
+
+        genre = genre.equals("No filter") ? "" : genre;
+        releaseYear = releaseYear.equals("No filter") ? "" : releaseYear;
+        rating = rating.equals("No filter") ? "" : rating;
+
+        List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre, releaseYear, rating);
         observableMovies.setAll(filteredMovies);
         sortMovies(sortedState);
     }

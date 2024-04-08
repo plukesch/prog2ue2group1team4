@@ -16,8 +16,8 @@ public class MovieAPI extends BaseAPI{
     private final String PATH = "movies";
 
 
-    public List<Movie> index(String query, String genre){
-        HttpUrl url = this.buildUrlWithParams(query, genre);
+    public List<Movie> index(String query, String genre, String releaseYear, String rating){
+        HttpUrl url = this.buildUrlWithParams(query, genre, releaseYear, rating);
         Request request = new Request.Builder()
                 .url(url.toString())
                 .addHeader("User-Agent", "http.agent")
@@ -47,15 +47,21 @@ public class MovieAPI extends BaseAPI{
         return url;
     }
 
-    private HttpUrl buildUrlWithParams(String query, String genre) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(this.BASE_URL).newBuilder();
-        urlBuilder.addPathSegment(this.PATH);
+    private HttpUrl buildUrlWithParams(String query, String genre, String releaseYear, String rating) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL).newBuilder();
+        urlBuilder.addPathSegment(PATH);
 
         if (query != null && !query.isEmpty()) {
             urlBuilder.addQueryParameter("query", query);
         }
-        if (genre != null && !genre.isEmpty()) {
+        if (genre != null && !genre.isEmpty() && !genre.equals("No filter")) {
             urlBuilder.addQueryParameter("genre", genre);
+        }
+        if (releaseYear != null && !releaseYear.isEmpty() && !releaseYear.equals("No filter")) {
+            urlBuilder.addQueryParameter("releaseYear", releaseYear);
+        }
+        if (rating != null && !rating.isEmpty() && !rating.equals("No filter")) {
+            urlBuilder.addQueryParameter("rating", rating);
         }
 
         System.out.println(urlBuilder);
