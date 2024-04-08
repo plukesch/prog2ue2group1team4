@@ -133,7 +133,13 @@ public class HomeController implements Initializable {
 
     public void searchBtnClicked(ActionEvent actionEvent) {
         String searchQuery = searchField.getText().trim();
-        String genre = genreComboBox.getValue().toString();
+        String genre = "";
+        if (genreComboBox.getValue() != null){
+            genre = genreComboBox.getValue().toString();
+            if (genre.equals("No filter")){
+                genre = "";
+            }
+        }
 
         List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre);
         observableMovies.setAll(filteredMovies);
