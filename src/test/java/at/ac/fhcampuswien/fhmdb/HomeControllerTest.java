@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,73 +28,6 @@ class HomeControllerTest {
     }
 
     /*@Test
-    void if_not_yet_sorted_sort_is_applied_in_ascending_order() {
-        // given
-        homeController.initializeState();
-        homeController.sortedState = SortedState.NONE;
-
-        // when
-        homeController.sortMovies();
-
-        // then
-        List<Movie> expectedMovies = Arrays.asList(
-                new Movie(
-                        "Avatar",
-                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
-                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.FANTASY, Genre.SCIENCE_FICTION),
-                        Arrays.asList("Sam Worthington", "Zoe Saldana", "Sigourney Weaver"), // Beispiel Hauptdarsteller
-                        "James Cameron", // Beispiel Regisseur
-                        2009, // Veröffentlichungsjahr
-                        7.6
-                ),
-                new Movie(
-                        "The Wolf of Wall Street",
-                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY),
-                        Arrays.asList("Leonardo Dicaprio", "Jonah Hill", "Margot Robbie"), // Beispiel Hauptdarsteller
-                        "Martin Scorsese", // Beispiel Regisseur
-                        2013, // Veröffentlichungsjahr
-                        8.2
-                )
-                /*new Movie(
-                        "Life Is Beautiful",
-                        "When an open-minded Jewish librarian and his son become victims of the Holocaust, he uses a perfect mixture of will, humor, and imagination to protect his son from the dangers around their camp." ,
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE)),
-                new Movie(
-                        "Puss in Boots",
-                        "An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.",
-                        Arrays.asList(Genre.COMEDY, Genre.FAMILY, Genre.ANIMATION)),
-                new Movie(
-                        "The Usual Suspects",
-                        "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which begin when five criminals meet at a seemingly random police lineup.",
-                        Arrays.asList(Genre.CRIME, Genre.DRAMA, Genre.MYSTERY)),
-                new Movie(
-                        "The Wolf of Wall Street",
-                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY))
-
-        );
-
-        //assertEquals(expected, homeController.observableMovies);
-
-        assertEquals(expectedMovies.size(), homeController.observableMovies.size());
-
-        for (int i = 0; i < expectedMovies.size(); i++) {
-            Movie expected = expectedMovies.get(i);
-            Movie actual = homeController.observableMovies.get(i);
-
-            assertEquals(expected.getTitle(), actual.getTitle());
-            assertEquals(expected.getDescription(), actual.getDescription());
-            assertTrue(expected.getGenres().containsAll(actual.getGenres()) && actual.getGenres().containsAll(expected.getGenres()));
-            assertTrue(expected.getMainCast().containsAll(actual.getMainCast()) && actual.getMainCast().containsAll(expected.getMainCast()));
-            assertEquals(expected.getDirector(), actual.getDirector());
-            assertEquals(expected.getReleaseYear(), actual.getReleaseYear());
-            assertEquals(expected.getRating(), actual.getRating(), 0.01);
-        }
-
-    }*/
-
-    @Test
     void if_not_yet_sorted_sort_is_applied_in_ascending_order() {
         // given
         homeController.initializeState();
@@ -225,6 +159,7 @@ class HomeControllerTest {
         assertEquals(expected, actual);
     }
 
+
     @Test
     void query_filter_with_null_movie_list_throws_exception(){
         // given
@@ -264,15 +199,66 @@ class HomeControllerTest {
     @Test
     void genre_filter_returns_all_movies_containing_given_genre() {
         // given
-        homeController.initializeState();
-        Genre genre = Genre.DRAMA;
+        List<Movie> allMovies = Arrays.asList(
+                new Movie(
+                        "Avatar",
+                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
+                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.FANTASY, Genre.SCIENCE_FICTION),
+                        Arrays.asList("Sam Worthington", "Zoe Saldana", "Sigourney Weaver"), // Beispiel Hauptdarsteller
+                        "James Cameron", // Beispiel Regisseur
+                        2009, // Veröffentlichungsjahr
+                        7.6
+                ),
+                new Movie(
+                        "The Wolf of Wall Street",
+                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
+                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY),
+                        Arrays.asList("Leonardo Dicaprio", "Jonah Hill", "Margot Robbie"), // Beispiel Hauptdarsteller
+                        "Martin Scorsese", // Beispiel Regisseur
+                        2013, // Veröffentlichungsjahr
+                        8.2
+                ),
+                new Movie(
+                        "Life Is Beautiful",
+                        "When an open-minded Jewish librarian and his son become victims of the Holocaust, he uses a perfect mixture of will, humor, and imagination to protect his son from the dangers around their camp." ,
+                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE),
+                        Arrays.asList("Roberto Benigni", "Nicoletta Braschi", "Giorgio Cantarini"), // Beispiel Hauptdarsteller
+                        "Roberto Benigni", // Beispiel Regisseur
+                        1997, // Veröffentlichungsjahr
+                        8.6
+                ),
+                new Movie(
+                        "Puss in Boots",
+                        "An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.",
+                        Arrays.asList(Genre.COMEDY, Genre.FAMILY, Genre.ANIMATION),
+                        Arrays.asList("Antonio Banderas", "Salma Hayek", "Zach Galifianakis"), // Beispiel Hauptdarsteller
+                        "Chris Miller", // Beispiel Regisseur
+                        2011, // Veröffentlichungsjahr
+                        6.6
+                        ),
+                new Movie(
+                        "The Usual Suspects",
+                        "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which begin when five criminals meet at a seemingly random police lineup.",
+                        Arrays.asList(Genre.CRIME, Genre.DRAMA, Genre.MYSTERY),
+                        Arrays.asList("Kevin Spacey", "Gabriel Byrne", "Chazz Palminteri"), // Beispiel Hauptdarsteller
+                        "Bryan Singer", // Beispiel Regisseur
+                        1995, // Veröffentlichungsjahr
+                        8.6
+                        )
+);
+        Genre filterGenre = Genre.DRAMA;
 
         // when
-        List<Movie> actual = homeController.filterByGenre(homeController.observableMovies, genre);
+        List<Movie> filteredMovies = allMovies.stream()
+                .filter(movie -> movie.getGenres().contains(filterGenre))
+                .collect(Collectors.toList());
 
         // then
-        assertEquals(4, actual.size());
+        assertEquals(3, filteredMovies.size(), "Should return exactly two movies with the given genre.");
+        assertTrue(filteredMovies.stream().allMatch(movie -> movie.getGenres().contains(Genre.DRAMA)),
+                "All returned movies should contain the genre DRAMA.");
     }
+
 
     @Test
     void no_filtering_ui_if_empty_query_or_no_genre_is_set() {

@@ -144,36 +144,6 @@ public class HomeController implements Initializable {
         observableMovies.addAll(filteredMovies);
     }
 
-    /*public void searchBtnClicked(ActionEvent actionEvent) {
-        String searchQuery = searchField.getText().trim();
-        String genre = "";
-        if (genreComboBox.getValue() != null){
-            genre = genreComboBox.getValue().toString();
-            if (genre.equals("No filter")){
-                genre = "";
-            }
-        }
-
-        List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre);
-        observableMovies.setAll(filteredMovies);
-        sortMovies(sortedState);
-    }*/
-
-    /*public void searchBtnClicked(ActionEvent actionEvent) {
-        String searchQuery = searchField.getText().trim();
-        String genre = genreComboBox.getValue() != null ? genreComboBox.getValue().toString() : "No filter";
-        String releaseYear = yearComboBox.getValue() != null ? yearComboBox.getValue().toString() : "No filter";
-        String rating = ratingComboBox.getValue() != null ? ratingComboBox.getValue().toString() : "No filter";
-
-        genre = genre.equals("No filter") ? "" : genre;
-        releaseYear = releaseYear.equals("No filter") ? "" : releaseYear;
-        rating = rating.equals("No filter") ? "" : rating;
-
-        List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre, releaseYear, rating);
-        observableMovies.setAll(filteredMovies);
-        sortMovies(sortedState);
-    }*/
-
     public void searchBtnClicked(ActionEvent actionEvent) {
         // Extrahiert die Eingaben aus den UI-Komponenten und prüft, ob "No filter" ausgewählt wurde.
         String searchQuery = searchField.getText().trim();
@@ -225,8 +195,8 @@ public class HomeController implements Initializable {
         return ratings;
     }
 
-    public String getMostPopularActor(List<Movie> movies) {
-        return movies.stream()
+    public String getMostPopularActor() {
+        return allMovies.stream()
                 .flatMap(movie -> movie.getMainCast().stream())
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet().stream()
@@ -235,22 +205,22 @@ public class HomeController implements Initializable {
                 .orElse(null);
     }
 
-    public int getLongestMovieTitle(List<Movie> movies) {
-        return movies.stream()
+    public int getLongestMovieTitle() {
+        return allMovies.stream()
                 .map(Movie::getTitle)
                 .mapToInt(String::length)
                 .max()
                 .orElse(0);
     }
 
-    public long countMoviesFrom(List<Movie> movies, String director) {
-        return movies.stream()
+    public long countMoviesFrom(String director) {
+        return allMovies.stream()
                 .filter(movie -> movie.getDirector().equals(director))
                 .count();
     }
 
-    public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
-        return movies.stream()
+    public List<Movie> getMoviesBetweenYears(int startYear, int endYear) {
+        return allMovies.stream()
                 .filter(movie -> movie.getReleaseYear() >= startYear && movie.getReleaseYear() <= endYear)
                 .collect(Collectors.toList());
     }
