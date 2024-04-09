@@ -8,11 +8,20 @@ public class Movie {
     public final String title;
     public final String description;
     public final List<Genre> genres;
+    public final List<String> mainCast; // Hinzugefügt für die Schauspieler
+    public final String director; // Hinzugefügt für den Regisseur
+    public final int releaseYear; // Hinzugefügt für das Veröffentlichungsjahr
+    public final double rating;
 
-    public Movie(String title, String description, List<Genre> genres) {
+    // Aktualisierter Konstruktor
+    public Movie(String title, String description, List<Genre> genres, List<String> mainCast, String director, int releaseYear, double rating) {
         this.title = title;
         this.description = description;
         this.genres = genres;
+        this.mainCast = mainCast;
+        this.director = director;
+        this.releaseYear = releaseYear;
+        this.rating = rating;
     }
 
     @Override
@@ -29,6 +38,7 @@ public class Movie {
         return this.title.equals(other.title) && this.description.equals(other.description) && this.genres.equals(other.genres);
     }
 
+    // Getter
     public String getTitle() {
         return title;
     }
@@ -41,7 +51,23 @@ public class Movie {
         return genres;
     }
 
-    public static List<Movie> initializeMovies(){
+    public List<String> getMainCast() {
+        return mainCast;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public double getRating(){
+        return rating;
+    }
+
+    /*public static List<Movie> initializeMovies(){
         List<Movie> movies = new ArrayList<>();
         movies.add(new Movie(
                 "Life Is Beautiful",
@@ -65,5 +91,5 @@ public class Movie {
                 Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY)));
 
         return movies;
-    }
+    }*/
 }
