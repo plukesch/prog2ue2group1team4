@@ -27,7 +27,7 @@ class HomeControllerTest {
         assertEquals(homeController.allMovies, homeController.observableMovies);
     }
 
-    /*@Test
+    @Test
     void if_not_yet_sorted_sort_is_applied_in_ascending_order() {
         // given
         homeController.initializeState();
@@ -47,116 +47,71 @@ class HomeControllerTest {
     }
 
     @Test
-    void if_last_sort_ascending_next_sort_should_be_descending() {
+    void if_sorted_ascending_then_sort_is_toggled_to_descending_order() {
+    // given
+    homeController.initializeState();
+    homeController.sortedState = SortedState.ASCENDING;  // Set initial state to ASCENDING
+
+    // when
+    homeController.sortMovies();  // This should toggle sorting to descending
+
+    // then
+    assertFalse(homeController.observableMovies.isEmpty());
+    int n = homeController.observableMovies.size();
+    for (int i = 0; i < n - 1; i++) {
+        String title1 = homeController.observableMovies.get(i).getTitle();
+        String title2 = homeController.observableMovies.get(i + 1).getTitle();
+        assertTrue(title1.compareTo(title2) >= 0);  // Check for descending order
+    }
+}
+
+    @Test
+void if_last_sort_descending_next_sort_should_be_ascending() {
+    // given
+    homeController.initializeState();
+    homeController.sortedState = SortedState.DESCENDING;  // Set initial state to DESCENDING
+
+    // when
+    homeController.sortMovies();  // This should toggle sorting to ascending
+
+    // then
+    assertFalse(homeController.observableMovies.isEmpty());
+    int n = homeController.observableMovies.size();
+    for (int i = 0; i < n - 1; i++) {
+        String title1 = homeController.observableMovies.get(i).getTitle();
+        String title2 = homeController.observableMovies.get(i + 1).getTitle();
+        assertTrue(title1.compareTo(title2) <= 0);  // Check for ascending order
+    }
+}
+
+    @Test
+    void query_filter_matches_with_lower_and_uppercase_letters() {
         // given
-        homeController.initializeState();
-        homeController.sortedState = SortedState.ASCENDING;
+        HomeController homeController = new HomeController();
+        homeController.initializeState();  // Setup initial state and data
 
-        // when
-        homeController.sortMovies();
-
-        // then
-        List<Movie> expected = Arrays.asList(
-                new Movie(
-                        "Avatar",
-                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
-                        Arrays.asList(Genre.ANIMATION, Genre.DRAMA, Genre.ACTION),
-                        Arrays.asList("Actor1", "Actor2"), // Beispiel Hauptdarsteller
-                        "Director Name", // Beispiel Regisseur
-                        2009, // Veröffentlichungsjahr
-                        7.6
-                )
-                /*new Movie(
-                        "The Usual Suspects",
-                        "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which begin when five criminals meet at a seemingly random police lineup.",
-                        Arrays.asList(Genre.CRIME, Genre.DRAMA, Genre.MYSTERY)),
-                new Movie(
-                        "Puss in Boots",
-                        "An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.",
-                        Arrays.asList(Genre.COMEDY, Genre.FAMILY, Genre.ANIMATION)),
+        // Assuming the initializeState method populates `allMovies` with test data
+        homeController.allMovies = List.of(
                 new Movie(
                         "Life Is Beautiful",
                         "When an open-minded Jewish librarian and his son become victims of the Holocaust, he uses a perfect mixture of will, humor, and imagination to protect his son from the dangers around their camp." ,
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE)),
-                new Movie(
-                        "Avatar",
-                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
-                        Arrays.asList(Genre.ANIMATION, Genre.DRAMA, Genre.ACTION))*/
+                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE),
+                        Arrays.asList("Roberto Benigni", "Nicoletta Braschi", "Giorgio Cantarini"), // Beispiel Hauptdarsteller
+                        "Roberto Benigni", // Beispiel Regisseur
+                        1997, // Veröffentlichungsjahr
+                        8.6
+                )
         );
 
-        assertEquals(expected, homeController.observableMovies);
-    }
-
-    @Test
-    void if_last_sort_descending_next_sort_should_be_ascending() {
-        // given
-        homeController.initializeState();
-        homeController.sortedState = SortedState.DESCENDING;
+        String query = "IfE";  // The query to test case insensitivity
 
         // when
-        homeController.sortMovies();
+        homeController.applyAllFilters(query, null);  // Apply filter with the query and no genre
 
         // then
-        List<Movie> expected = Arrays.asList(
-                new Movie(
-                        "Avatar",
-                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
-                        Arrays.asList(Genre.ANIMATION, Genre.DRAMA, Genre.ACTION),
-                        Arrays.asList("Actor1", "Actor2"), // Beispiel Hauptdarsteller
-                        "Director Name", // Beispiel Regisseur
-                        2009, // Veröffentlichungsjahr
-                        7.6
-                )
-                /*new Movie(
-                        "Life Is Beautiful",
-                        "When an open-minded Jewish librarian and his son become victims of the Holocaust, he uses a perfect mixture of will, humor, and imagination to protect his son from the dangers around their camp." ,
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE)),
-                new Movie(
-                        "Puss in Boots",
-                        "An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.",
-                        Arrays.asList(Genre.COMEDY, Genre.FAMILY, Genre.ANIMATION)),
-                new Movie(
-                        "The Usual Suspects",
-                        "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which begin when five criminals meet at a seemingly random police lineup.",
-                        Arrays.asList(Genre.CRIME, Genre.DRAMA, Genre.MYSTERY)),
-                new Movie(
-                        "The Wolf of Wall Street",
-                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY))*/
-
-        );
-
-        assertEquals(expected, homeController.observableMovies);
-
-    }
-
-    @Test
-    void query_filter_matches_with_lower_and_uppercase_letters(){
-        // given
-        homeController.initializeState();
-        String query = "IfE";
-
-        // when
-        List<Movie> actual = homeController.filterByQuery(homeController.observableMovies, query);
-
-        // then
-        List<Movie> expected = Arrays.asList(
-                new Movie(
-                        "The Wolf of Wall Street",
-                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY),
-                        Arrays.asList("Actor1", "Actor2"), // Beispiel Hauptdarsteller
-                        "Director Name", // Beispiel Regisseur
-                        2009, // Veröffentlichungsjahr
-                        7.6
-                )
-                /*new Movie(
-                        "The Wolf of Wall Street",
-                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY))*/
-        );
-
-        assertEquals(expected, actual);
+        assertEquals(1, homeController.observableMovies.size());
+        assertTrue(homeController.observableMovies.stream()
+            .anyMatch(movie -> movie.getTitle().equalsIgnoreCase("Life is Beautiful")));
     }
 
 
@@ -273,39 +228,10 @@ class HomeControllerTest {
     }
 
     @Test
-    void getMostPopularActor_returns_correct_actor() {
-        // given
-        List<Movie> movies = Arrays.asList(
-                new Movie(
-                        "Avatar",
-                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
-                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.FANTASY, Genre.SCIENCE_FICTION),
-                        Arrays.asList("Sam Worthington", "Zoe Saldana", "Sigourney Weaver", "Jonah Hill"), // Beispiel Hauptdarsteller
-                        "James Cameron", // Beispiel Regisseur
-                        2009, // Veröffentlichungsjahr
-                        7.6
-                ),
-                new Movie(
-                        "The Wolf of Wall Street",
-                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY),
-                        Arrays.asList("Leonardo Dicaprio", "Jonah Hill", "Margot Robbie"), // Beispiel Hauptdarsteller
-                        "Martin Scorsese", // Beispiel Regisseur
-                        2013, // Veröffentlichungsjahr
-                        8.2
-                ));
-
-        // when
-        String mostPopularActor = homeController.getMostPopularActor(movies);
-
-        // then
-        assertEquals("Jonah Hill", mostPopularActor);
-    }
-
-    /*@Test
-    void getLongestMovieTitle_returns_correct_length() {
-        // given
-        List<Movie> movies = Arrays.asList(
+    void is_the_most_popular_actor_correctly_identified() {
+        // Given
+        HomeController homeController = new HomeController();
+        homeController.allMovies = Arrays.asList(
                 new Movie(
                         "Avatar",
                         "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
@@ -323,37 +249,145 @@ class HomeControllerTest {
                         "Martin Scorsese", // Beispiel Regisseur
                         2013, // Veröffentlichungsjahr
                         8.2
-                ));
+                ),
+                new Movie(
+                        "Inception",
+                        "A thief, who steals corporate secrets through use of dream-sharing technology, is given the inverse task of planting an idea into the mind of a CEO.",
+                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.THRILLER, Genre.SCIENCE_FICTION),
+                        Arrays.asList("Leonardo Dicaprio", "Joseph Gordon-Levitt", "Elliot Page"), // Beispiel Hauptdarsteller
+                        "Christopher Nolan", // Beispiel Regisseur
+                        2010, // Veröffentlichungsjahr
+                        8.8
+                )
+        );
 
-        // when
-        int maxLength = homeController.getLongestMovieTitle(movies);
+        // When
+        String mostPopularActor = homeController.getMostPopularActor();
 
-        // then
-        assertEquals(expectedLength, maxLength);
+        // Then
+        assertEquals("Leonardo Dicaprio", mostPopularActor, "Leonardo Dicaprio should be identified as the most popular actor.");
     }
-
     @Test
-    void countMoviesFrom_returns_correct_count() {
-        // given
-        List<Movie> movies = // Initialisiere deine Liste von Movies hier
+    void longest_movie_title_returns_correct_length() {
+        // Given
+        HomeController homeController = new HomeController();
+        homeController.allMovies = Arrays.asList(
+                new Movie(
+                        "Avatar",
+                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
+                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.FANTASY, Genre.SCIENCE_FICTION),
+                        Arrays.asList("Sam Worthington", "Zoe Saldana", "Sigourney Weaver"), // Beispiel Hauptdarsteller
+                        "James Cameron", // Beispiel Regisseur
+                        2009, // Veröffentlichungsjahr
+                        7.6
+                ),
+                new Movie(
+                        "The Wolf of Wall Street",
+                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
+                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY),
+                        Arrays.asList("Leonardo Dicaprio", "Jonah Hill", "Margot Robbie"), // Beispiel Hauptdarsteller
+                        "Martin Scorsese", // Beispiel Regisseur
+                        2013, // Veröffentlichungsjahr
+                        8.2
+                ),
+                new Movie(
+                        "Inception",
+                        "A thief, who steals corporate secrets through use of dream-sharing technology, is given the inverse task of planting an idea into the mind of a CEO.",
+                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.THRILLER, Genre.SCIENCE_FICTION),
+                        Arrays.asList("Leonardo Dicaprio", "Joseph Gordon-Levitt", "Elliot Page"), // Beispiel Hauptdarsteller
+                        "Christopher Nolan", // Beispiel Regisseur
+                        2010, // Veröffentlichungsjahr
+                        8.8
+                )
+        );
 
-        // when
-        long count = homeController.countMoviesFrom(movies, "Director Name");
+        // When
+        int longestTitleLength = homeController.getLongestMovieTitle();
 
-        // then
-        assertEquals(expectedCount, count);
+        // Then
+        assertEquals(23, longestTitleLength, "The length of the longest movie title should be 27.");
     }
-
     @Test
-    void getMoviesBetweenYears_returns_correct_movies() {
-        // given
-        List<Movie> movies = // Initialisiere deine Liste von Movies hier
+    void counting_movies_returns_correct_count() {
+        // Given
+        HomeController homeController = new HomeController();
+        homeController.allMovies = Arrays.asList(
+                new Movie(
+                        "Avatar",
+                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
+                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.FANTASY, Genre.SCIENCE_FICTION),
+                        Arrays.asList("Sam Worthington", "Zoe Saldana", "Sigourney Weaver"), // Beispiel Hauptdarsteller
+                        "James Cameron", // Beispiel Regisseur
+                        2009, // Veröffentlichungsjahr
+                        7.6
+                ),
+                new Movie(
+                        "The Wolf of Wall Street",
+                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
+                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY),
+                        Arrays.asList("Leonardo Dicaprio", "Jonah Hill", "Margot Robbie"), // Beispiel Hauptdarsteller
+                        "Martin Scorsese", // Beispiel Regisseur
+                        2013, // Veröffentlichungsjahr
+                        8.2
+                ),
+                new Movie(
+                        "Inception",
+                        "A thief, who steals corporate secrets through use of dream-sharing technology, is given the inverse task of planting an idea into the mind of a CEO.",
+                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.THRILLER, Genre.SCIENCE_FICTION),
+                        Arrays.asList("Leonardo Dicaprio", "Joseph Gordon-Levitt", "Elliot Page"), // Beispiel Hauptdarsteller
+                        "Christopher Nolan", // Beispiel Regisseur
+                        2010, // Veröffentlichungsjahr
+                        8.8
+                )
+        );
 
-                // when
-                List<Movie> filteredMovies = homeController.getMoviesBetweenYears(movies, 2000, 2010);
+        // When
+        long count = homeController.countMoviesFrom("Christopher Nolan");
 
-        // then
-        assertEquals(expectedNumberOfMovies, filteredMovies.size());
-        // Zusätzliche Assertions können hinzugefügt werden, um zu prüfen, ob die zurückgegebenen Filme die erwarteten sind
-    }*/
+        // Then
+        assertEquals(1, count, "There should be 1 movie directed Christopher Nolan.");
+    }
+    @Test
+    void movies_between_years_returns_correct_movies() {
+        // Given
+        HomeController homeController = new HomeController();
+        homeController.allMovies = Arrays.asList(
+                new Movie(
+                        "Avatar",
+                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
+                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.FANTASY, Genre.SCIENCE_FICTION),
+                        Arrays.asList("Sam Worthington", "Zoe Saldana", "Sigourney Weaver"), // Beispiel Hauptdarsteller
+                        "James Cameron", // Beispiel Regisseur
+                        2009, // Veröffentlichungsjahr
+                        7.6
+                ),
+                new Movie(
+                        "The Wolf of Wall Street",
+                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
+                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY),
+                        Arrays.asList("Leonardo Dicaprio", "Jonah Hill", "Margot Robbie"), // Beispiel Hauptdarsteller
+                        "Martin Scorsese", // Beispiel Regisseur
+                        2013, // Veröffentlichungsjahr
+                        8.2
+                ),
+                new Movie(
+                        "Inception",
+                        "A thief, who steals corporate secrets through use of dream-sharing technology, is given the inverse task of planting an idea into the mind of a CEO.",
+                        Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.THRILLER, Genre.SCIENCE_FICTION),
+                        Arrays.asList("Leonardo Dicaprio", "Joseph Gordon-Levitt", "Elliot Page"), // Beispiel Hauptdarsteller
+                        "Christopher Nolan", // Beispiel Regisseur
+                        2010, // Veröffentlichungsjahr
+                        8.8
+                )
+        );
+
+        // When
+        List<Movie> filteredMovies = homeController.getMoviesBetweenYears(2010, 2020);
+
+        // Then
+        assertEquals(2, filteredMovies.size(), "There should be 2 movies released between 2010 and 2020.");
+        assertTrue(filteredMovies.stream().anyMatch(movie -> movie.getTitle().equals("The Wolf of Wall Street")), "The Wolf of Wall Street should be included.");
+        assertTrue(filteredMovies.stream().anyMatch(movie -> movie.getTitle().equals("Inception")), "Inception should be included.");
+    }
 }
+
