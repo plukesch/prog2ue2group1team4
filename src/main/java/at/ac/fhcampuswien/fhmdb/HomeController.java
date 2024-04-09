@@ -185,7 +185,7 @@ public class HomeController implements Initializable {
                 ? ratingComboBox.getValue().toString() : "";
 
         // Ruft Filme von der API ab, ohne das Rating als Filter zu verwenden.
-        List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre, releaseYear, "");
+        List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre, releaseYear, rating);
 
         // Filtert nach dem Rating, falls ein spezifischer Wert ausgewählt wurde.
         if (!rating.isEmpty()) {

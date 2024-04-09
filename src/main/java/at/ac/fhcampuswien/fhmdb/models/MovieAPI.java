@@ -36,38 +36,6 @@ public class MovieAPI extends BaseAPI{
         return parsedMovies;
     }
 
-    /*private List<Movie> parseMovies(String json) {
-        // Diese Implementierung hängt von der Struktur des JSON und der Bibliothek ab, die du für das Parsing verwendest (z.B. Gson).
-        // Angenommen, du verwendest Gson für das Parsing:
-        Type listOfMoviesType = new TypeToken<List<Movie>>(){}.getType();
-        List<Movie> movies = gson.fromJson(json, listOfMoviesType);
-
-        // Hypothetische Annahme, dass jede Movie-Information in einem separaten Objekt innerhalb des JSON ist,
-        // und dass du für jedes dieser Objekte ein neues Movie-Objekt erstellst.
-        return movies.stream().map(movieJson -> {
-            String title = movieJson.getTitle();
-            String description = movieJson.getDescription();
-            List<Genre> genres = movieJson.getGenres(); // Angenommen, die Genres sind direkt verfügbar und passen zum Enum.
-            List<String> mainCast = movieJson.getMainCast(); // Diese Zeile setzt voraus, dass eine getMainCast-Methode existiert.
-            String director = movieJson.getDirector(); // Setzt voraus, dass eine getDirector-Methode existiert.
-            int releaseYear = movieJson.getReleaseYear(); // Setzt voraus, dass eine getReleaseYear-Methode existiert.
-
-            // Erstellen eines neuen Movie-Objekts mit den extrahierten Daten
-            return new Movie(title, description, genres, mainCast, director, releaseYear);
-        }).collect(Collectors.toList());
-    }*/
-
-    private HttpUrl buildUrl() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(this.BASE_URL).newBuilder();
-
-        urlBuilder.addQueryParameter("genre", "ACTION");
-
-        HttpUrl url = urlBuilder.addPathSegment(this.PATH).build();
-
-        System.out.println(urlBuilder);
-
-        return url;
-    }
 
     private HttpUrl buildUrlWithParams(String query, String genre, String releaseYear, String rating) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL).newBuilder();
