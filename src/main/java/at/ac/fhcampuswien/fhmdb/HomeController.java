@@ -8,6 +8,7 @@ import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +18,6 @@ import javafx.scene.control.TextField;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 import java.net.URL;
 import java.util.*;
@@ -72,7 +72,7 @@ public class HomeController implements Initializable {
         yearComboBox.getItems().add("No filter");
         yearComboBox.getItems().addAll(getReleasedYears());
         ratingComboBox.getItems().add("No filter");
-        ratingComboBox.getItems().addAll(getRating());
+        ratingComboBox.getItems().addAll(getRatings());
         genreComboBox.getItems().add("No filter");  // add "no filter" to the combobox
         genreComboBox.getItems().addAll(genres);    // add all genres to the combobox
         genreComboBox.setPromptText("Filter by Genre");
@@ -159,7 +159,7 @@ public class HomeController implements Initializable {
         sortMovies(sortedState);
     }*/
 
-    public void searchBtnClicked(ActionEvent actionEvent) {
+    /*public void searchBtnClicked(ActionEvent actionEvent) {
         String searchQuery = searchField.getText().trim();
         String genre = genreComboBox.getValue() != null ? genreComboBox.getValue().toString() : "No filter";
         String releaseYear = yearComboBox.getValue() != null ? yearComboBox.getValue().toString() : "No filter";
@@ -172,6 +172,31 @@ public class HomeController implements Initializable {
         List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre, releaseYear, rating);
         observableMovies.setAll(filteredMovies);
         sortMovies(sortedState);
+    }*/
+
+    public void searchBtnClicked(ActionEvent actionEvent) {
+        // Extrahiert die Eingaben aus den UI-Komponenten und prüft, ob "No filter" ausgewählt wurde.
+        String searchQuery = searchField.getText().trim();
+        String genre = genreComboBox.getValue() != null && !genreComboBox.getValue().equals("No filter")
+                ? genreComboBox.getValue().toString() : "";
+        String releaseYear = yearComboBox.getValue() != null && !yearComboBox.getValue().equals("No filter")
+                ? yearComboBox.getValue().toString() : "";
+        String rating = ratingComboBox.getValue() != null && !ratingComboBox.getValue().equals("No filter")
+                ? ratingComboBox.getValue().toString() : "";
+
+        // Ruft Filme von der API ab, ohne das Rating als Filter zu verwenden.
+        List<Movie> filteredMovies = new MovieAPI().index(searchQuery, genre, releaseYear, "");
+
+        // Filtert nach dem Rating, falls ein spezifischer Wert ausgewählt wurde.
+        if (!rating.isEmpty()) {
+            double ratingValue = Double.parseDouble(rating); // Konvertiert den Rating-String in einen Double-Wert.
+            filteredMovies = filteredMovies.stream()
+                    .filter(movie -> movie.getRating() == ratingValue)
+                    .collect(Collectors.toList());
+        }
+
+        // Aktualisiert die ObservableList und die ListView.
+        observableMovies.setAll(filteredMovies);
     }
 
     public void sortBtnClicked(ActionEvent actionEvent) {
@@ -189,7 +214,7 @@ public class HomeController implements Initializable {
         return years;
     }
 
-    private ArrayList<Double> getRating(){
+    private ArrayList<Double> getRatings(){
         double start = 0.0;
         double end = 10.1;
         ArrayList<Double> ratings = new ArrayList<>();
